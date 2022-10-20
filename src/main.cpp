@@ -10,6 +10,7 @@
 int main(int argc, char *argv[])
 {
     std::string path;
+    char serarator;
 
 #if defined(_WIN32)
     char *buff = new (std::nothrow) char[10 * 1024];
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
         if (!GetEnvironmentVariable("PATH", buff, 10 * 1024))
         {
             DWORD dwLastError = GetLastError();
+
             if (dwLastError == ERROR_ENVVAR_NOT_FOUND)
             {
                 std::cerr << "Error! Environment variable was not found.\n";
@@ -27,23 +29,31 @@ int main(int argc, char *argv[])
             {
                 std::cerr << "Error! Code: " << dwLastError << "\n";
             }
+
             delete []buff;
             return 1;
         }
+
         path = buff;
         delete []buff;
+
+        serarator = ';';
     }
     else
     {
         std::cerr << "Error! Failed to allocate memory.\n";
         return 1;
     }
-#else
+#elif defined(__linux__) || defined(__unix__ )
     const char* pValue = std::getenv("PATH");
     if (pValue)
     {
         path = pValue;
     }
+
+    serarator = ':';
+#else
+    #error "Unknown OS"
 #endif
 
     std::list<std::string> vlist;
