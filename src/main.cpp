@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     char separator;
 
 #if defined(_WIN32)
+
     char *buff = new (std::nothrow) char[10 * 1024];
     if (buff)
     {
@@ -36,24 +37,34 @@ int main(int argc, char *argv[])
 
         path = buff;
         delete []buff;
-
-        separator = ';';
     }
     else
     {
         std::cerr << "Error! Failed to allocate memory.\n";
         return 1;
     }
+
+    separator = ';';
+
 #elif defined(__linux__) || defined(__unix__ )
+
     const char* pValue = std::getenv("PATH");
     if (pValue)
     {
         path = pValue;
     }
+    else
+    {
+        std::cerr << "Error! Environment variable was not found.\n";
+        return 1;
+    }
 
     separator = ':';
+
 #else
+
     #error "Unknown OS"
+    
 #endif
 
     std::list<std::string> vlist;
@@ -85,5 +96,6 @@ int main(int argc, char *argv[])
 	        std::cout << "#" << (counter++) << " " << (*it) << "\n";
 	    }
 	}
+
     return 0;
 }
