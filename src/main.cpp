@@ -8,11 +8,12 @@ int main(int argc, char *argv[])
 {
     std::string path;
 
-    char *buff = new (std::nothrow) char[2048];
+#if defined(_WIN32)
+    char *buff = new (std::nothrow) char[10 * 1024];
     if (buff)
     {
-        memset(buff, 0, 2048);
-        if (!GetEnvironmentVariable("PATH", buff, 2048))
+        memset(buff, 0, 10 * 1024);
+        if (!GetEnvironmentVariable("PATH", buff, 10 * 1024))
         {
             DWORD dwLastError = GetLastError();
             if (dwLastError == ERROR_ENVVAR_NOT_FOUND)
@@ -34,6 +35,13 @@ int main(int argc, char *argv[])
         std::cerr << "Error! Failed to allocate memory.\n";
         return 1;
     }
+#else
+    const char* pValue = std::getenv("PATH");
+    if (pValue)
+    {
+        path = pValue;
+    }
+#endif
 
     std::list<std::string> vlist;
 
@@ -58,10 +66,10 @@ int main(int argc, char *argv[])
     {
 	    std::cout << "List: \n";
 
-	    int counter = 0;
-	    for (std::list<std::string>::const_iterator i = vlist.begin(); i != vlist.end(); i++)
+	    size_t counter = 1;
+	    for (std::list<std::string>::const_iterator it = vlist.begin(); it != vlist.end(); it++)
 	    {
-	        std::cout << "#" << (counter++) << " " << (*i) << "\n";
+	        std::cout << "#" << (counter++) << " " << (*it) << "\n";
 	    }
 	}
     return 0;
