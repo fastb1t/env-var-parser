@@ -2,7 +2,10 @@
 #include <cstring>
 #include <list>
 #include <algorithm>
+
+#if defined(_WIN32)
 #include <windows.h>
+#endif
 
 int main(int argc, char *argv[])
 {
