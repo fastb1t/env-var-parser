@@ -10,7 +10,7 @@ fi
 if [ -f "src/main.cpp" ]
 then
 {
-    g++ src/main.cpp -o bin/env-var-parser
+    g++ src/main.cpp -o bin/env-var-parser -static-libstdc++ -static-libgcc -s -Os
 }
 else
 {
