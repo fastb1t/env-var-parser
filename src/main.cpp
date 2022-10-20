@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     std::string path;
-    char serarator;
+    char separator;
 
 #if defined(_WIN32)
     char *buff = new (std::nothrow) char[10 * 1024];
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         path = buff;
         delete []buff;
 
-        serarator = ';';
+        separator = ';';
     }
     else
     {
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         path = pValue;
     }
 
-    serarator = ':';
+    separator = ':';
 #else
     #error "Unknown OS"
 #endif
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     {
         size_t pos = -1;
         size_t last_pos = 0;
-        while ((pos = path.find(';', pos + 1)) != std::string::npos)
+        while ((pos = path.find(separator, pos + 1)) != std::string::npos)
         {
             vlist.push_back(path.substr(last_pos, pos - last_pos));
             last_pos = pos + 1;
